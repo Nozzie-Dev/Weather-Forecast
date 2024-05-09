@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>and save to reload.</p>
+        <p>React Weather App</p>
         <a
           className="App-link"
           href="https://reactjs.org"
