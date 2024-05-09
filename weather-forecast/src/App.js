@@ -1,11 +1,10 @@
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>React Weather App</p>
+        <p>and save to reload.</p>
         <a
           className="App-link"
           href="https://reactjs.org"
