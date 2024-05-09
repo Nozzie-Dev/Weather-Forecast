@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -13,12 +13,13 @@ function WeatherForecast() {
     base: "https://api.openweathermap.org/data/2.5/",
   };
 
-  useEffect(() => {
-    if (query) {
+  const search = (evt) => {
+    if (evt.key === "Enter" || evt.type === "click") {
       axios
         .get(`${api.base}weather?q=${query}&units=${unit}&APPID=${api.key}`)
         .then((res) => {
           setWeather(res.data);
+          setQuery("");
         })
         .catch((err) => {
           console.log(err);
@@ -27,16 +28,14 @@ function WeatherForecast() {
       axios
         .get(`${api.base}forecast?q=${query}&units=${unit}&APPID=${api.key}`)
         .then((res) => {
-          // Filter forecast for the next 7 days starting from tomorrow
-          const currentDate = new Date();
-          currentDate.setDate(currentDate.getDate() + 1);
-          const nextWeek = new Date();
-          nextWeek.setDate(currentDate.getDate() + 7);
-
+          // Filter forecast for the next 6 days starting from the next day
+          const currentDate = new Date().getDate();
           const filteredForecast = res.data.list
             .filter((item) => {
-              const forecastDate = new Date(item.dt * 1000);
-              return forecastDate >= currentDate && forecastDate < nextWeek;
+              const forecastDate = new Date(item.dt * 1000).getDate();
+              return (
+                forecastDate > currentDate && forecastDate <= currentDate + 6
+              );
             })
             .map((item) => ({
               ...item,
@@ -50,10 +49,20 @@ function WeatherForecast() {
           console.log(err);
         });
     }
-  }, [query, unit]);
+  };
 
   const toggleUnit = (selectedUnit) => {
     setUnit(selectedUnit);
+    axios
+      .get(
+        `${api.base}weather?q=${query}&units=${selectedUnit}&APPID=${api.key}`
+      )
+      .then((res) => {
+        setWeather(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const dateBuilder = (d) => {
@@ -88,17 +97,13 @@ function WeatherForecast() {
               placeholder="Search for a city..."
               onChange={(e) => setQuery(e.target.value)}
               value={query}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  setQuery(e.target.value);
-                }
-              }}
+              onKeyPress={search}
             />
             <div className="input-group-append">
               <button
                 className="btn btn-outline-secondary"
                 type="button"
-                onClick={() => setQuery(query)}
+                onClick={search}
               >
                 Search
               </button>
