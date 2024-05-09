@@ -20,30 +20,17 @@ function WeatherForecast() {
         .then((res) => {
           setWeather(res.data);
           setQuery("");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      axios
-        .get(`${api.base}forecast?q=${query}&units=${unit}&APPID=${api.key}`)
-        .then((res) => {
-          // Filter forecast for the next 6 days starting from the next day
-          const currentDate = new Date().getDate();
-          const filteredForecast = res.data.list
-            .filter((item) => {
-              const forecastDate = new Date(item.dt * 1000).getDate();
-              return (
-                forecastDate > currentDate && forecastDate <= currentDate + 6
-              );
-            })
-            .map((item) => ({
-              ...item,
-              day: new Date(item.dt * 1000).toLocaleDateString("en-US", {
-                weekday: "long",
-              }),
-            }));
-          setForecast(filteredForecast);
+          axios
+            .get(
+              `${api.base}forecast?q=${query}&units=${unit}&APPID=${api.key}`
+            )
+            .then((res) => {
+              // Filter forecast for the next 7 days
+              const filteredForecast = res.data.list
+                .filter((item, index) => index % 8 === 0)
+                .slice(0, 7);
+              setForecast(filteredForecast);
+            });
         })
         .catch((err) => {
           console.log(err);
@@ -52,17 +39,19 @@ function WeatherForecast() {
   };
 
   const toggleUnit = (selectedUnit) => {
-    setUnit(selectedUnit);
-    axios
-      .get(
-        `${api.base}weather?q=${query}&units=${selectedUnit}&APPID=${api.key}`
-      )
-      .then((res) => {
-        setWeather(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (selectedUnit !== unit) {
+      setUnit(selectedUnit);
+      axios
+        .get(
+          `${api.base}weather?q=${query}&units=${selectedUnit}&APPID=${api.key}`
+        )
+        .then((res) => {
+          setWeather(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const dateBuilder = (d) => {
@@ -83,6 +72,7 @@ function WeatherForecast() {
       date: `${date < 10 ? "0" + date : date}/${
         month < 10 ? "0" + month : month
       }`,
+      weekday: days[(d.getDay() + 1) % 7], // Next day of the week
     };
   };
 
@@ -120,6 +110,7 @@ function WeatherForecast() {
                   {weather.name}, {weather.sys.country}
                 </h5>
                 <p>{dateBuilder(new Date()).date}</p>
+                <p>{dateBuilder(new Date()).weekday}</p>
                 <div>
                   <span
                     style={{ cursor: "pointer" }}
@@ -186,8 +177,9 @@ function WeatherForecast() {
                 <div className="col-md-4" key={index}>
                   <div className="card">
                     <div className="card-body">
-                      <h6>{item.day}</h6>
+                      <h6>{dateBuilder(new Date(item.dt * 1000)).day}</h6>
                       <p>{dateBuilder(new Date(item.dt * 1000)).date}</p>
+                      <p>{dateBuilder(new Date(item.dt * 1000)).weekday}</p>
                       <p>
                         Max: {Math.round(item.main.temp_max)}
                         {unit === "metric" ? "°C" : "°F"}
