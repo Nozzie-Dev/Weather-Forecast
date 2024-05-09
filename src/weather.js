@@ -111,7 +111,7 @@ function WeatherForecast() {
                   {weather.name}, {weather.sys.country}
                 </h5>
                 <p>{dateBuilder(new Date()).date}</p>
-                <p>{dateBuilder(new Date()).weekday}</p>
+                <p>{dateBuilder(new Date()).day}</p>
                 <div>
                   <span
                     style={{ cursor: "pointer" }}
@@ -180,14 +180,13 @@ function WeatherForecast() {
                     <div className="card-body">
                       <h6>{dateBuilder(new Date(item.dt * 1000)).day}</h6>
                       <p>{dateBuilder(new Date(item.dt * 1000)).date}</p>
-                      <p>{dateBuilder(new Date(item.dt * 1000)).weekday}</p>
                       <p>
                         Max: {Math.round(item.main.temp_max)}
-                        {unit === "metric" ? "°C" : "°F"}
+                        "°C"
                       </p>
                       <p>
                         Min: {Math.round(item.main.temp_min)}
-                        {unit === "metric" ? "°C" : "°F"}
+                        "°C"
                       </p>
                       <img
                         src={`http://openweathermap.org/img/wn/${item.weather[0].icon}.png`}
