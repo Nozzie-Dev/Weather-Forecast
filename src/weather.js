@@ -44,11 +44,24 @@ function WeatherForecast() {
   };
 
   const dateBuilder = (d) => {
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const day = days[d.getDay()];
     const date = d.getDate();
     const month = d.getMonth() + 1;
-    return `${date < 10 ? "0" + date : date}/${
-      month < 10 ? "0" + month : month
-    }`;
+    return {
+      day: day,
+      date: `${date < 10 ? "0" + date : date}/${
+        month < 10 ? "0" + month : month
+      }`,
+    };
   };
 
   return (
@@ -84,7 +97,7 @@ function WeatherForecast() {
                 <h5>
                   {weather.name}, {weather.sys.country}
                 </h5>
-                <p>{dateBuilder(new Date())}</p>
+                <p>{dateBuilder(new Date()).date}</p>
               </div>
               <div className="card-body">
                 <div className="row">
@@ -119,13 +132,14 @@ function WeatherForecast() {
       {forecast.length > 0 && (
         <div className="row mt-3 justify-content-center">
           <div className="col-md-6">
-            <h4>Six Day Forecast</h4>
+            <h4>Seven Day Forecast</h4>
             <div className="row">
               {forecast.map((item, index) => (
                 <div className="col-md-4" key={index}>
                   <div className="card">
                     <div className="card-body">
-                      <h6>{dateBuilder(new Date(item.dt * 1000))}</h6>
+                      <h6>{dateBuilder(new Date(item.dt * 1000)).day}</h6>
+                      <p>{dateBuilder(new Date(item.dt * 1000)).date}</p>
                       <p>Max: {Math.round(item.main.temp_max)}°C</p>
                       <p>Min: {Math.round(item.main.temp_min)}°C</p>
                       <img
