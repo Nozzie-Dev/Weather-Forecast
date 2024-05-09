@@ -5,6 +5,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>and save to reload.</p>
+        <button type="button" class="btn btn-danger">
+          Test bootstrap
+        </button>
         <a
           className="App-link"
           href="https://reactjs.org"
