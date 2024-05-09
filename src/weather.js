@@ -28,10 +28,21 @@ function WeatherForecast() {
       axios
         .get(`${api.base}forecast?q=${query}&units=${unit}&APPID=${api.key}`)
         .then((res) => {
-          // Filter forecast for the next 7 days
+          // Filter forecast for the next 6 days starting from the next day
+          const currentDate = new Date().getDate();
           const filteredForecast = res.data.list
-            .filter((item, index) => index % 9 === 0)
-            .slice(0, 8);
+            .filter((item) => {
+              const forecastDate = new Date(item.dt * 1000).getDate();
+              return (
+                forecastDate > currentDate && forecastDate <= currentDate + 6
+              );
+            })
+            .map((item) => ({
+              ...item,
+              day: new Date(item.dt * 1000).toLocaleDateString("en-US", {
+                weekday: "long",
+              }),
+            }));
           setForecast(filteredForecast);
         })
         .catch((err) => {
@@ -72,7 +83,6 @@ function WeatherForecast() {
       date: `${date < 10 ? "0" + date : date}/${
         month < 10 ? "0" + month : month
       }`,
-      weekday: days[(d.getDay() + 1) % 8], // Next day of the week
     };
   };
 
@@ -110,7 +120,6 @@ function WeatherForecast() {
                   {weather.name}, {weather.sys.country}
                 </h5>
                 <p>{dateBuilder(new Date()).date}</p>
-                <p>{dateBuilder(new Date()).weekday}</p>
                 <div>
                   <span
                     style={{ cursor: "pointer" }}
@@ -177,9 +186,8 @@ function WeatherForecast() {
                 <div className="col-md-4" key={index}>
                   <div className="card">
                     <div className="card-body">
-                      <h6>{dateBuilder(new Date(item.dt * 1000)).day}</h6>
+                      <h6>{item.day}</h6>
                       <p>{dateBuilder(new Date(item.dt * 1000)).date}</p>
-                      <p>{dateBuilder(new Date(item.dt * 1000)).weekday}</p>
                       <p>
                         Max: {Math.round(item.main.temp_max)}
                         {unit === "metric" ? "°C" : "°F"}
