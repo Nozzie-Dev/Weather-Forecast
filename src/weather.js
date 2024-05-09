@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./WeatherForecast.css"; // Import your CSS file for styling
 
 function WeatherForecast() {
   const [query, setQuery] = useState("");
