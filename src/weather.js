@@ -38,20 +38,20 @@ function WeatherForecast() {
     }
   };
 
-  const toggleUnit = () => {
-    setUnit(unit === "metric" ? "imperial" : "metric");
-    axios
-      .get(
-        `${api.base}weather?q=${query}&units=${
-          unit === "metric" ? "imperial" : "metric"
-        }&APPID=${api.key}`
-      )
-      .then((res) => {
-        setWeather(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const toggleUnit = (selectedUnit) => {
+    if (selectedUnit !== unit) {
+      setUnit(selectedUnit);
+      axios
+        .get(
+          `${api.base}weather?q=${query}&units=${selectedUnit}&APPID=${api.key}`
+        )
+        .then((res) => {
+          setWeather(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const dateBuilder = (d) => {
@@ -111,26 +111,29 @@ function WeatherForecast() {
                 </h5>
                 <p>{dateBuilder(new Date()).date}</p>
                 <p>{dateBuilder(new Date()).weekday}</p>
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="flexSwitchCheckDefault"
-                    onClick={toggleUnit}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="flexSwitchCheckDefault"
+                <div>
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => toggleUnit("metric")}
                   >
-                    {unit === "metric" ? "°C" : "°F"}
-                  </label>
+                    °C
+                  </span>{" "}
+                  |{" "}
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => toggleUnit("imperial")}
+                  >
+                    °F
+                  </span>
                 </div>
               </div>
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-6">
                     <h6>
-                      {Math.round(weather.main.temp)}
+                      {unit === "metric"
+                        ? Math.round(weather.main.temp)
+                        : Math.round((weather.main.temp * 9) / 5 + 32)}
                       {unit === "metric" ? "°C" : "°F"}
                     </h6>
                     <img
@@ -142,7 +145,10 @@ function WeatherForecast() {
                   <div className="col-md-6">
                     <p>Humidity: {weather.main.humidity}%</p>
                     <p>
-                      Wind: {weather.wind.speed}{" "}
+                      Wind:{" "}
+                      {unit === "metric"
+                        ? weather.wind.speed
+                        : Math.round(weather.wind.speed * 0.621371)}{" "}
                       {unit === "metric" ? "km/h" : "mph"}
                     </p>
                   </div>
