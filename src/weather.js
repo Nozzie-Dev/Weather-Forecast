@@ -6,6 +6,7 @@ function WeatherForecast() {
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
   const [forecast, setForecast] = useState([]);
+  const [unit, setUnit] = useState("metric"); // Default unit is metric (Celsius)
 
   const api = {
     key: "743bee57fddbfaf52447193a87d5dd25",
@@ -15,12 +16,14 @@ function WeatherForecast() {
   const search = (evt) => {
     if (evt.key === "Enter" || evt.type === "click") {
       axios
-        .get(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+        .get(`${api.base}weather?q=${query}&units=${unit}&APPID=${api.key}`)
         .then((res) => {
           setWeather(res.data);
           setQuery("");
           axios
-            .get(`${api.base}forecast?q=${query}&units=metric&APPID=${api.key}`)
+            .get(
+              `${api.base}forecast?q=${query}&units=${unit}&APPID=${api.key}`
+            )
             .then((res) => {
               // Filter forecast for the next 7 days
               const filteredForecast = res.data.list
@@ -33,6 +36,22 @@ function WeatherForecast() {
           console.log(err);
         });
     }
+  };
+
+  const toggleUnit = () => {
+    setUnit(unit === "metric" ? "imperial" : "metric");
+    axios
+      .get(
+        `${api.base}weather?q=${query}&units=${
+          unit === "metric" ? "imperial" : "metric"
+        }&APPID=${api.key}`
+      )
+      .then((res) => {
+        setWeather(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const dateBuilder = (d) => {
@@ -92,11 +111,28 @@ function WeatherForecast() {
                 </h5>
                 <p>{dateBuilder(new Date()).date}</p>
                 <p>{dateBuilder(new Date()).weekday}</p>
+                <div className="form-check form-switch">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="flexSwitchCheckDefault"
+                    onClick={toggleUnit}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="flexSwitchCheckDefault"
+                  >
+                    {unit === "metric" ? "°C" : "°F"}
+                  </label>
+                </div>
               </div>
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-6">
-                    <h6>{Math.round(weather.main.temp)}°C</h6>
+                    <h6>
+                      {Math.round(weather.main.temp)}
+                      {unit === "metric" ? "°C" : "°F"}
+                    </h6>
                     <img
                       src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
                       alt="weather-icon"
@@ -105,7 +141,10 @@ function WeatherForecast() {
                   </div>
                   <div className="col-md-6">
                     <p>Humidity: {weather.main.humidity}%</p>
-                    <p>Wind: {weather.wind.speed} km/h</p>
+                    <p>
+                      Wind: {weather.wind.speed}{" "}
+                      {unit === "metric" ? "km/h" : "mph"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -135,8 +174,14 @@ function WeatherForecast() {
                       <h6>{dateBuilder(new Date(item.dt * 1000)).day}</h6>
                       <p>{dateBuilder(new Date(item.dt * 1000)).date}</p>
                       <p>{dateBuilder(new Date(item.dt * 1000)).weekday}</p>
-                      <p>Max: {Math.round(item.main.temp_max)}°C</p>
-                      <p>Min: {Math.round(item.main.temp_min)}°C</p>
+                      <p>
+                        Max: {Math.round(item.main.temp_max)}
+                        {unit === "metric" ? "°C" : "°F"}
+                      </p>
+                      <p>
+                        Min: {Math.round(item.main.temp_min)}
+                        {unit === "metric" ? "°C" : "°F"}
+                      </p>
                       <img
                         src={`http://openweathermap.org/img/wn/${item.weather[0].icon}.png`}
                         alt="weather-icon"
