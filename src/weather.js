@@ -22,10 +22,10 @@ function WeatherForecast() {
           axios
             .get(`${api.base}forecast?q=${query}&units=metric&APPID=${api.key}`)
             .then((res) => {
-              // Filter forecast for the next 6 days
+              // Filter forecast for the next 7 days
               const filteredForecast = res.data.list
                 .filter((item, index) => index % 8 === 0)
-                .slice(0, 6);
+                .slice(0, 7);
               setForecast(filteredForecast);
             });
         })
@@ -53,6 +53,7 @@ function WeatherForecast() {
       date: `${date < 10 ? "0" + date : date}/${
         month < 10 ? "0" + month : month
       }`,
+      weekday: days[(d.getDay() + 1) % 7], // Next day of the week
     };
   };
 
@@ -90,6 +91,7 @@ function WeatherForecast() {
                   {weather.name}, {weather.sys.country}
                 </h5>
                 <p>{dateBuilder(new Date()).date}</p>
+                <p>{dateBuilder(new Date()).weekday}</p>
               </div>
               <div className="card-body">
                 <div className="row">
@@ -132,6 +134,7 @@ function WeatherForecast() {
                     <div className="card-body">
                       <h6>{dateBuilder(new Date(item.dt * 1000)).day}</h6>
                       <p>{dateBuilder(new Date(item.dt * 1000)).date}</p>
+                      <p>{dateBuilder(new Date(item.dt * 1000)).weekday}</p>
                       <p>Max: {Math.round(item.main.temp_max)}°C</p>
                       <p>Min: {Math.round(item.main.temp_min)}°C</p>
                       <img
