@@ -22,14 +22,10 @@ function WeatherForecast() {
           axios
             .get(`${api.base}forecast?q=${query}&units=metric&APPID=${api.key}`)
             .then((res) => {
-              // Filter forecast for the next 8 days
+              // Filter forecast for the next 6 days
               const filteredForecast = res.data.list
-                .filter((item, index) => {
-                  const currentDate = new Date().getDate();
-                  const forecastDate = new Date(item.dt * 1000).getDate();
-                  return forecastDate > currentDate && index % 8 === 0;
-                })
-                .slice(0, 8);
+                .filter((item, index) => index % 8 === 0)
+                .slice(0, 6);
               setForecast(filteredForecast);
             });
         })
@@ -131,7 +127,7 @@ function WeatherForecast() {
             <h4>Forecast</h4>
             <div className="row">
               {forecast.map((item, index) => (
-                <div className="col-md-3" key={index}>
+                <div className="col-md-4" key={index}>
                   <div className="card">
                     <div className="card-body">
                       <h6>{dateBuilder(new Date(item.dt * 1000)).day}</h6>
