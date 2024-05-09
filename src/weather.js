@@ -20,17 +20,19 @@ function WeatherForecast() {
         .then((res) => {
           setWeather(res.data);
           setQuery("");
-          axios
-            .get(
-              `${api.base}forecast?q=${query}&units=${unit}&APPID=${api.key}`
-            )
-            .then((res) => {
-              // Filter forecast for the next 7 days
-              const filteredForecast = res.data.list
-                .filter((item, index) => index % 8 === 0)
-                .slice(0, 7);
-              setForecast(filteredForecast);
-            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      axios
+        .get(`${api.base}forecast?q=${query}&units=${unit}&APPID=${api.key}`)
+        .then((res) => {
+          // Filter forecast for the next 7 days
+          const filteredForecast = res.data.list
+            .filter((item, index) => index % 9 === 0)
+            .slice(0, 8);
+          setForecast(filteredForecast);
         })
         .catch((err) => {
           console.log(err);
@@ -39,19 +41,17 @@ function WeatherForecast() {
   };
 
   const toggleUnit = (selectedUnit) => {
-    if (selectedUnit !== unit) {
-      setUnit(selectedUnit);
-      axios
-        .get(
-          `${api.base}weather?q=${query}&units=${selectedUnit}&APPID=${api.key}`
-        )
-        .then((res) => {
-          setWeather(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    setUnit(selectedUnit);
+    axios
+      .get(
+        `${api.base}weather?q=${query}&units=${selectedUnit}&APPID=${api.key}`
+      )
+      .then((res) => {
+        setWeather(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const dateBuilder = (d) => {
@@ -72,7 +72,7 @@ function WeatherForecast() {
       date: `${date < 10 ? "0" + date : date}/${
         month < 10 ? "0" + month : month
       }`,
-      weekday: days[(d.getDay() + 1) % 7], // Next day of the week
+      weekday: days[(d.getDay() + 1) % 8], // Next day of the week
     };
   };
 
