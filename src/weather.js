@@ -67,7 +67,9 @@ function WeatherForecast() {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 text-center">
+      {" "}
+      {/* Updated */}
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="input-group mb-3">
@@ -149,7 +151,7 @@ function WeatherForecast() {
           <div className="col-md-6">
             <div className="card">
               <div className="card-body text-center">
-                <h3>Search for a city to get the weather</h3>
+                <h3>Enter a city to find the weather forecast for the week</h3>
               </div>
             </div>
           </div>
