@@ -27,6 +27,9 @@
 .App-link {
   color: #61dafb;
 }
+.git {
+  padding: 15px;
+}
 
 @keyframes App-logo-spin {
   from {

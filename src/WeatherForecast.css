@@ -1,6 +1,7 @@
 .container {
   background: linear-gradient(to bottom right, #00bfff, #ff69b4);
   padding: 30px;
+  border-radius: 25px;
 }
 
 .card {
