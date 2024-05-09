@@ -7,6 +7,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <WeatherForecast />
+        <p>
+          Noziphezinhle Nzimande's WeatherForecast source code is available on
+          <a href="https://github.com/Nozzie-Dev/Weather-Forecast">Github</a>
+        </p>
       </header>
     </div>
   );

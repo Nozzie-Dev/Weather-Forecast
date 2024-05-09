@@ -129,20 +129,27 @@ function WeatherForecast() {
                 </div>
               </div>
               <div className="card-body">
-                <div className="row">
-                  <div className="col-md-6">
-                    <h6>
+                <div className="row align-items-center">
+                  <div className="col-md-4">
+                    <h1 className="display-4">
                       {unit === "metric"
                         ? Math.round(weather.main.temp)
                         : Math.round((weather.main.temp * 9) / 5 + 32)}
                       {unit === "metric" ? "°C" : "°F"}
-                    </h6>
+                    </h1>
+                  </div>
+                  <div className="col-md-4">
                     <img
                       src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
                       alt="weather-icon"
+                      style={{ width: "100px" }}
                     />
+                  </div>
+                  <div className="col-md-4">
                     <p>{weather.weather[0].description}</p>
                   </div>
+                </div>
+                <div className="row">
                   <div className="col-md-6">
                     <p>Humidity: {weather.main.humidity}%</p>
                     <p>
@@ -182,11 +189,11 @@ function WeatherForecast() {
                       <p>{dateBuilder(new Date(item.dt * 1000)).date}</p>
                       <p>
                         Max: {Math.round(item.main.temp_max)}
-                        "°C"
+                        °C
                       </p>
                       <p>
                         Min: {Math.round(item.main.temp_min)}
-                        "°C"
+                        °C
                       </p>
                       <img
                         src={`http://openweathermap.org/img/wn/${item.weather[0].icon}.png`}
