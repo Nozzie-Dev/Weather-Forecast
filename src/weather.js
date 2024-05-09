@@ -12,64 +12,43 @@ function WeatherForecast() {
     base: "https://api.openweathermap.org/data/2.5/",
   };
 
-  const search = () => {
-    axios
-      .get(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-      .then((res) => {
-        setWeather(res.data);
-        setQuery("");
-        axios
-          .get(`${api.base}forecast?q=${query}&units=metric&APPID=${api.key}`)
-          .then((res) => {
-            // Filter forecast for the next 6 days
-            const filteredForecast = res.data.list
-              .filter((item) => {
-                const currentDate = new Date().getDate();
-                const forecastDate = new Date(item.dt * 1000).getDate();
-                return (
-                  forecastDate !== currentDate && forecastDate > currentDate
-                );
-              })
-              .slice(0, 6);
-            setForecast(filteredForecast);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const search = (evt) => {
+    if (evt.key === "Enter" || evt.type === "click") {
+      axios
+        .get(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+        .then((res) => {
+          setWeather(res.data);
+          setQuery("");
+          axios
+            .get(`${api.base}forecast?q=${query}&units=metric&APPID=${api.key}`)
+            .then((res) => {
+              // Filter forecast for the next 6 days
+              const filteredForecast = res.data.list
+                .filter((item, index) => {
+                  const currentDate = new Date().getDate();
+                  const forecastDate = new Date(item.dt * 1000).getDate();
+                  return (
+                    forecastDate !== currentDate &&
+                    forecastDate > currentDate &&
+                    index % 8 === 0
+                  );
+                })
+                .slice(0, 6);
+              setForecast(filteredForecast);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const dateBuilder = (d) => {
-    let months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    let days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-    let year = d.getFullYear();
-
-    return `${day} ${date} ${month} ${year}`;
+    const date = d.getDate();
+    const month = d.getMonth() + 1;
+    return `${date < 10 ? "0" + date : date}/${
+      month < 10 ? "0" + month : month
+    }`;
   };
 
   return (
@@ -83,6 +62,7 @@ function WeatherForecast() {
               placeholder="Search for a city..."
               onChange={(e) => setQuery(e.target.value)}
               value={query}
+              onKeyPress={search}
             />
             <div className="input-group-append">
               <button
@@ -142,7 +122,7 @@ function WeatherForecast() {
             <h4>Six Day Forecast</h4>
             <div className="row">
               {forecast.map((item, index) => (
-                <div className="col-md-2" key={index}>
+                <div className="col-md-4" key={index}>
                   <div className="card">
                     <div className="card-body">
                       <h6>{dateBuilder(new Date(item.dt * 1000))}</h6>
