@@ -12,25 +12,21 @@ function WeatherForecast() {
     base: "https://api.openweathermap.org/data/2.5/",
   };
 
-  const search = (evt) => {
-    if (evt.key === "Enter") {
-      axios
-        .get(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-        .then((res) => {
-          setWeather(res.data);
-          setQuery("");
-          axios
-            .get(`${api.base}forecast?q=${query}&units=metric&APPID=${api.key}`)
-            .then((res) => {
-              setForecast(
-                res.data.list.filter((item, index) => index % 8 === 0)
-              );
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+  const search = () => {
+    axios
+      .get(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+      .then((res) => {
+        setWeather(res.data);
+        setQuery("");
+        axios
+          .get(`${api.base}forecast?q=${query}&units=metric&APPID=${api.key}`)
+          .then((res) => {
+            setForecast(res.data.list.filter((item, index) => index % 8 === 0));
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const dateBuilder = (d) => {
@@ -68,8 +64,6 @@ function WeatherForecast() {
 
   return (
     <div className="container mt-5 text-center">
-      {" "}
-      {/* Updated */}
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="input-group mb-3">
@@ -79,7 +73,6 @@ function WeatherForecast() {
               placeholder="Search for a city..."
               onChange={(e) => setQuery(e.target.value)}
               value={query}
-              onKeyPress={search}
             />
             <div className="input-group-append">
               <button
@@ -93,7 +86,7 @@ function WeatherForecast() {
           </div>
         </div>
       </div>
-      {typeof weather.main != "undefined" ? (
+      {typeof weather.main !== "undefined" ? (
         <div>
           <div className="row">
             <div className="col-md-6">
