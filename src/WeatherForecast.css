@@ -1,5 +1,5 @@
 .container {
-  background: linear-gradient(to bottom right, #00bfff, #ff69b4);
+  background: url('src\body_background.jpg') no-repeat center center fixed;
   padding: 30px;
   border-radius: 25px;
 }
