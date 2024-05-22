@@ -1,5 +1,5 @@
 .container {
-  background: url('/src/body_background.jpg');
+  background: url('/src/body_background.jpg') no-repeat center center fixed;
   padding: 30px;
   border-radius: 25px;
 }
