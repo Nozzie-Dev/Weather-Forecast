@@ -1,11 +1,12 @@
 .container {
   background: url('/src/body_background.jpg') no-repeat center center fixed;
+  background-size: cover;
   padding: 30px;
   border-radius: 25px;
 }
 
 .card {
-  border-radius: 15px;
+  border-radius: 25px;
 }
 
 .card-header {
