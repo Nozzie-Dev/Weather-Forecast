@@ -1,5 +1,5 @@
 .container {
-  background: url('src\body_background.jpg') no-repeat center center fixed;
+  background: url('/src/body_background.jpg');
   padding: 30px;
   border-radius: 25px;
 }
@@ -9,5 +9,5 @@
 }
 
 .card-header {
-  background: url('src\div_background.jpg') no-repeat center center fixed;
+  background: url('/src/div_background.jpg');
 }
