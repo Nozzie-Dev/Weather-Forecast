@@ -9,5 +9,5 @@
 }
 
 .card-header {
-  background-color: white;
+  background: url('src\div_background.jpg') no-repeat center center fixed;
 }
